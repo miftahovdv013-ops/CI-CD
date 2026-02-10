@@ -1,0 +1,38 @@
+stages:
+  - build
+  - test
+
+variables:
+  BUILD_DIR: "build"
+
+build-job:
+  stage: build
+  tags:
+    - netology
+  script:
+    - echo "начало Building"
+    - mkdir -p $BUILD_DIR
+    - echo "File created by GitLab CI/CD" > $BUILD_DIR/info.txt
+    - echo "Build completed successfully"
+  artifacts:
+    paths:
+      - $BUILD_DIR/
+    expire_in: 1 hour
+
+test-job:
+  stage: test
+  tags:
+    - netology
+  script:
+    - echo "Testing"
+    - echo "Checking if info.txt exists in build directory..."
+    - |
+      if [ -f "$BUILD_DIR/info.txt" ]; then
+        echo "File info.txt exists!"
+        echo "File content:"
+        cat $BUILD_DIR/info.txt
+      else
+        echo "File info.txt not found!"
+        exit 1
+      fi
+    - echo "Test completed successfully"
